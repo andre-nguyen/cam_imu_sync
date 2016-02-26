@@ -1,2 +1,2 @@
 # cam_imu_sync
-Synchronization driver for bluefox2 cameras and VN100 IMU
+Synchronization driver for ptgrey USB3 cameras and VN100 IMU
