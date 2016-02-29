@@ -23,11 +23,9 @@
 
 #include <ros/ros.h>
 #include <dynamic_reconfigure/server.h>
-#include <flea3/Flea3DynConfig.h>
+#include <pointgrey_camera_driver/PointGreyConfig.h>
 
-namespace flea3 {
-class Flea3Ros;
-}  // namespace flea3
+class PointGreyCameraRos;
 
 namespace imu_vn_100 {
 class ImuVn100;
@@ -39,9 +37,9 @@ class CamImuSynchronizer {
  public:
   using Imu = imu_vn_100::ImuVn100;
   using ImuPtr = boost::shared_ptr<Imu>;
-  using Cam = flea3::Flea3Ros;
+  using Cam = PointGreyCameraRos;
   using CamPtr = boost::shared_ptr<Cam>;
-  using Config = flea3::Flea3DynConfig;
+  using Config = pointgrey_camera_driver::PointGreyConfig;
 
   CamImuSynchronizer(const ros::NodeHandle& pnh);
   ~CamImuSynchronizer();
@@ -59,7 +57,7 @@ class CamImuSynchronizer {
   ImuPtr imu_;
   std::vector<CamPtr> cameras_;
   boost::shared_ptr<boost::thread> img_poll_thread_;
-  dynamic_reconfigure::Server<flea3::Flea3DynConfig> cam_cfg_server_;
+  dynamic_reconfigure::Server<pointgrey_camera_driver::PointGreyConfig> cam_cfg_server_;
 
   void pollImages();
   void startPoll();

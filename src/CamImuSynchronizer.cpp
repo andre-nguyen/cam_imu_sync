@@ -16,8 +16,8 @@
  */
 
 #include <cam_imu_sync/CamImuSynchronizer.h>
-#include <flea3/Flea3DynConfig.h>
-#include <flea3/flea3_ros.h>
+#include <pointgrey_camera_driver/PointGreyConfig.h>
+#include <pointgrey_camera_driver/PointGreyCamera_ros.h>
 #include <imu_vn_100/imu_vn_100.h>
 
 namespace cam_imu_sync {
@@ -87,11 +87,12 @@ void CamImuSynchronizer::pollImages() {
 }
 
 void CamImuSynchronizer::configureCameras(Config& config) {
-  config.fps = imu_->sync_info().rate;
+  config.frame_rate = imu_->sync_info().rate;
   for (auto& cam : cameras_) {
     cam->Stop();
-    cam->camera().Configure(config);
-    cam->set_fps(config.fps);
+    // Using LEVEL_RECONFIGURE_CLOSE because we stopped the camera anyways
+    cam->camera().setNewConfiguration(config, PointGreyCamera::LEVEL_RECONFIGURE_CLOSE);
+    cam->set_fps(config.frame_rate);
     cam->Start();
   }
 }

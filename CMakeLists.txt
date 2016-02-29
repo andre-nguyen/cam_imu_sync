@@ -6,7 +6,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
 find_package(catkin REQUIRED COMPONENTS
   camera_base
-  flea3
+  pointgrey_camera_driver
+  vnproglib
   imu_vn_100
   roscpp
   sensor_msgs

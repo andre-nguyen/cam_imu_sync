@@ -1,12 +1,12 @@
 <launch>
     <!--############### Node Configurations ##################-->
     <arg name="output" default="screen"/>
-    <arg name="sync_rate" default="20"/>
+    <arg name="sync_rate" default="30"/>
     <arg name="num_cameras" default="2"/>
 
     <!--############### IMU Configurations ###################-->
     <!-- Connection -->
-    <arg name="port" default="/dev/serial/by-id/usb-FTDI_TTL232R-3V3_FT8Y6SOG-if00-port0"/>
+    <arg name="port" default="/dev/ttyUSB0"/>
 
     <!-- Frame ID for messages -->
     <arg name="imu_frame_id" default="imu"/>
@@ -28,8 +28,8 @@
     <!-- Camera Configurations -->
     <!-- Common Interface -->
     <arg name="frame_rate" default="$(arg sync_rate)"/>
-    <arg name="cam0" default="15322783"/>
-    <arg name="cam1" default="15322809"/>
+    <arg name="cam0" default="9400431"/>
+    <arg name="cam1" default="10082494"/>
 
     <group ns="sync/imu">
         <param name="port" type="string" value="$(arg port)"/>
@@ -40,6 +40,7 @@
         <param name="enable_temp" type="bool" value="$(arg enable_temp)"/>
         <param name="sync_rate" type="int" value="$(arg sync_rate)"/>
         <param name="sync_pulse_width_us" type="int" value="$(arg sync_pulse_width_us)"/>
+        <param name="vn_serial_output" type="int" value="2" />
     </group>
 
     <!-- Sync Node -->
