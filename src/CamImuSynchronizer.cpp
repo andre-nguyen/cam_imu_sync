@@ -45,6 +45,11 @@ CamImuSynchronizer::CamImuSynchronizer(const ros::NodeHandle& pnh)
       boost::bind(&CamImuSynchronizer::configure, this, _1, _2));
 }
 
+CamImuSynchronizer::~CamImuSynchronizer()
+{
+  stopPoll();
+}
+
 void CamImuSynchronizer::configure(Config& config, int level) {
   if (level < 0) {
     ROS_INFO("%s: %s", pnh_.getNamespace().c_str(),

@@ -44,7 +44,7 @@ class CamImuSynchronizer {
   using Config = flea3::Flea3DynConfig;
 
   CamImuSynchronizer(const ros::NodeHandle& pnh);
-  ~CamImuSynchronizer() = default;
+  ~CamImuSynchronizer();
   CamImuSynchronizer(const CamImuSynchronizer&) = delete;
   CamImuSynchronizer& operator=(const CamImuSynchronizer&) = delete;
 
