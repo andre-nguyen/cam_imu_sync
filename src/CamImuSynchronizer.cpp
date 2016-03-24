@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+#include <mutex>
+
 #include <cam_imu_sync/CamImuSynchronizer.h>
 #include <flea3/Flea3DynConfig.h>
 #include <flea3/flea3_ros.h>
@@ -64,6 +66,7 @@ void CamImuSynchronizer::pollImages() {
     cam->Grab(image_msg);
   }
 
+  ros::Time prev_time;
   while (is_polling_ && ros::ok()) {
     ros::Time time;
     for (size_t i = 0; i < cameras_.size(); ++i) {
@@ -72,8 +75,14 @@ void CamImuSynchronizer::pollImages() {
       // After the first camera finished grabing, we get the time stamp from
       // imu. Because Grab blocks until the buffer is retrieved, this time stamp
       // is guaranteed to correspond to the imu that triggered this image
-      if (i == 0) time = imu_->sync_info().time;
+      imu_->lock_sync_info();
+      if (i == 0) time = imu_->sync_info()->time;
       image_msg->header.stamp = time;
+      if (i == 0 && prev_time == time) {
+        ROS_ERROR("SHIT DOUBLE TIME STAMP %d:%d-%d:%d", prev_time.sec, prev_time.nsec, time.sec, time.nsec);
+      }
+      prev_time = time;
+      imu_->unlock_sync_info();
       // Publish takes less then 0.1ms to finish, so it is safe to put it here
       // in the loop
       cameras_[i]->Publish(image_msg);
@@ -82,7 +91,7 @@ void CamImuSynchronizer::pollImages() {
 }
 
 void CamImuSynchronizer::configureCameras(Config& config) {
-  config.fps = imu_->sync_info().rate;
+  config.frame_rate = imu_->sync_info()->rate;
   for (auto& cam : cameras_) {
     cam->Stop();
     cam->camera().Configure(config);

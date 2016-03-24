@@ -38,7 +38,7 @@
         <param name="enable_mag" type="bool" value="$(arg enable_mag)"/>
         <param name="enable_pres" type="bool" value="$(arg enable_pres)"/>
         <param name="enable_temp" type="bool" value="$(arg enable_temp)"/>
-        <param name="sync_rate" type="int" value="$(arg sync_rate)"/>
+        <param name="sync_rate" type="double" value="$(arg sync_rate)"/>
         <param name="sync_pulse_width_us" type="int" value="$(arg sync_pulse_width_us)"/>
     </group>
 
@@ -55,6 +55,8 @@
         <param name="cam1/identifier" type="string" value="$(arg cam1)"/>
         <param name="cam1/calib_url" type="string" value="file://${ROS_HOME}/camera_info/pg_$(arg cam1).yaml"/>
 
+        <param name="video_mode" type="string" value="Format0_Mode5" />
+        <param name="frame_rate" type="double" value="60" />
         <param name="auto_shutter" type="bool" value="false"/>
         <param name="shutter_ms" type="double" value="6"/>
         <param name="auto_gain" type="bool" value="false"/>
