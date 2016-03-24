@@ -31,8 +31,15 @@ add_dependencies(${PROJECT_NAME}
   )
 
 add_executable(${PROJECT_NAME}_node src/cam_imu_sync_node.cpp)
-
+add_executable(
+  dup_stamp_verify
+  src/duplicate_stamp_verification.cpp
+)
 target_link_libraries(${PROJECT_NAME}_node
   ${PROJECT_NAME}
   ${catkin_LIBRARIES}
   )
+
+target_link_libraries(dup_stamp_verify
+  ${catkin_LIBRARIES}
+)
