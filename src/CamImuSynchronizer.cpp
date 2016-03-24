@@ -72,25 +72,31 @@ void CamImuSynchronizer::pollImages() {
   }
 
   ros::Time prev_time;
+  bool publish = true;
   while (is_polling_ && ros::ok()) {
     ros::Time time;
+    publish = true;
     for (size_t i = 0; i < cameras_.size(); ++i) {
       auto image_msg = boost::make_shared<sensor_msgs::Image>();
       cameras_[i]->Grab(image_msg);
       // After the first camera finished grabing, we get the time stamp from
       // imu. Because Grab blocks until the buffer is retrieved, this time stamp
       // is guaranteed to correspond to the imu that triggered this image
-      imu_->lock_sync_info();
-      if (i == 0) time = imu_->sync_info()->time;
-      image_msg->header.stamp = time;
-      if (i == 0 && prev_time == time) {
-        ROS_ERROR("SHIT DOUBLE TIME STAMP %d:%d-%d:%d", prev_time.sec, prev_time.nsec, time.sec, time.nsec);
+      if (i == 0) {
+          imu_->lock_sync_info();
+          time = imu_->sync_info()->time;
+          if (prev_time == time) {
+              //ROS_ERROR("SHIT DOUBLE TIME STAMP %d:%d-%d:%d", prev_time.sec,
+              //prev_time.nsec, time.sec, time.nsec);
+              publish = false;
+          }
+          prev_time = time;
+          imu_->unlock_sync_info();
       }
-      prev_time = time;
-      imu_->unlock_sync_info();
+      image_msg->header.stamp = time;
       // Publish takes less then 0.1ms to finish, so it is safe to put it here
       // in the loop
-      cameras_[i]->Publish(image_msg);
+      if(publish) cameras_[i]->Publish(image_msg);
     }
   }
 }
